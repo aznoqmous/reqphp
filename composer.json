@@ -1,0 +1,17 @@
+{
+    "name": "aznoqmous/reqphp",
+    "authors": [
+        {
+            "name": "aznoqmous",
+            "email": "paul.landreau931v@gmail.com"
+        }
+    ],
+    "autoload" : {
+      "psr-4" : {
+        "Aznoqmous\\" : "src"
+      }
+    },
+    "require-dev": {
+        "symfony/var-dumper": "^5.0"
+    }
+}
