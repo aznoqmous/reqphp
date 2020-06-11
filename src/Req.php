@@ -19,7 +19,7 @@ class Req {
   public function do($params)
   {
     $curl = curl_init();
-    
+
     if(is_array($params)){
       if($this->method == 'POST') {
         curl_setopt($curl, CURLOPT_URL, $this->url);
@@ -27,11 +27,18 @@ class Req {
       }
       else {
         curl_setopt($curl, CURLOPT_URL, $this->url . $this->getQueryString($params));
-        dump($this->getQueryString($params));
       }
     }
     curl_setopt($curl, CURLOPT_RETURNTRANSFER, TRUE);
     curl_setopt($curl, CURLOPT_FOLLOWLOCATION, TRUE);
+
+    global $cookies;
+    curl_setopt($curl, CURLOPT_HEADERFUNCTION, function($curl, $headerLine){
+        global $cookies;
+        if (preg_match('/^Set-Cookie:\s*([^;]*)/mi', $headerLine, $cookie) == 1) $cookies[] = $cookie[1];
+        return strlen($headerLine);
+    });
+
 
     $data = curl_exec($curl);
 
@@ -41,7 +48,8 @@ class Req {
     $res = [
       'time' => $time,
       'info' => $infos,
-      'data' => $data
+      'data' => $data,
+      'cookies' => $cookies
     ];
 
     if($res) return $res;
